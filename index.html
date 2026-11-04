@@ -3,106 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منصة السادس الإعدادي - الشاملة</title>
+    <title>منصة السادس الإعدادي التفاعلية</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- خط Cairo الأنيق -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
         body { 
-            font-family: 'Tajawal', sans-serif; 
-            background-color: var(--tg-theme-bg-color, #f3f4f6); 
-            color: var(--tg-theme-text-color, #1f2937); 
+            background-color: var(--tg-theme-bg-color, #f8fafc); 
+            color: var(--tg-theme-text-color, #0f172a); 
         }
-        .subject-card { 
-            transition: transform 0.2s; 
+        .card-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .subject-card:active { 
-            transform: scale(0.95); 
+        .card-btn:active {
+            transform: scale(0.94);
         }
         .modal { 
-            transition: opacity 0.3s ease, transform 0.3s ease; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         .modal-hidden { 
             opacity: 0; 
             pointer-events: none; 
-            transform: translateY(20px); 
+            transform: translateY(100%); 
         }
         .chapter-content { 
             max-height: 0; 
             overflow: hidden; 
-            transition: max-height 0.4s ease; 
+            transition: max-height 0.4s ease-in-out; 
         }
         .chapter-expanded { 
             max-height: 5000px; 
         }
-        .badge { 
-            font-size: 0.75rem; 
-        }
-
-        .bg-islamic { background: linear-gradient(135deg, #10b981, #059669); }
-        .bg-arabic { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .bg-english { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-        .bg-biology { background: linear-gradient(135deg, #ec4899, #db2777); }
-        .bg-math { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .bg-chemistry { background: linear-gradient(135deg, #14b8a6, #0d9488); }
-        .bg-physics { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+        
+        /* تدرجات ألوان مميزة */
+        .grad-islamic { background: linear-gradient(135deg, #10b981, #047857); }
+        .grad-arabic { background: linear-gradient(135deg, #f59e0b, #b45309); }
+        .grad-english { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .grad-biology { background: linear-gradient(135deg, #ec4899, #be185d); }
+        .grad-math { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .grad-chemistry { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+        .grad-physics { background: linear-gradient(135deg, #f43f5e, #be123c); }
     </style>
 </head>
-<body class="antialiased pb-10">
+<body class="antialiased pb-10 select-none">
 
     <!-- شريط الترحيب -->
-    <div class="bg-white dark:bg-gray-800 shadow-sm p-4 rounded-b-3xl mb-6 mx-2 mt-2 flex justify-between items-center" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
+    <div class="bg-white/80 backdrop-blur-md shadow-sm p-4 rounded-b-3xl mb-6 mx-2 mt-2 flex justify-between items-center border border-slate-100">
         <div>
-            <h1 class="text-xl font-bold text-gray-800" style="color: var(--tg-theme-text-color, #1f2937);" id="welcome-text">مرحباً يا بطل 🎓</h1>
-            <p class="text-sm text-gray-500" style="color: var(--tg-theme-hint-color, #6b7280);">اختر المادة لتبدأ مراجعة الوزاريات الشاملة</p>
+            <h1 class="text-lg font-black text-slate-800" id="welcome-text">أهلاً بك يا بطل 🎓</h1>
+            <p class="text-xs font-semibold text-slate-500">اختر المادة وابدأ التحدي والمراجعة</p>
         </div>
-        <div class="text-2xl">🇮🇶</div>
+        <div class="w-10 h-10 rounded-2xl bg-emerald-100 flex items-center justify-center text-xl shadow-inner">
+            🇮🇶
+        </div>
     </div>
 
     <!-- شبكة المواد -->
-    <div class="px-4 grid grid-cols-2 gap-4">
-        <div onclick="openSubject('islamic', 'التربية الإسلامية')" class="subject-card bg-islamic text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🕋</span>
-            <span class="font-bold">الإسلامية</span>
+    <div class="px-4 grid grid-cols-2 gap-3.5">
+        <div onclick="playClick(); openSubject('islamic', 'التربية الإسلامية')" class="card-btn grad-islamic text-white p-4 rounded-2xl shadow-lg shadow-emerald-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+            <span class="text-3xl filter drop-shadow">🕋</span>
+            <span class="font-extrabold text-sm">الإسلامية</span>
         </div>
-        <div onclick="openSubject('arabic', 'اللغة العربية')" class="subject-card bg-arabic text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">📖</span>
-            <span class="font-bold">العربية</span>
+        <div onclick="playClick(); openSubject('arabic', 'اللغة العربية')" class="card-btn grad-arabic text-white p-4 rounded-2xl shadow-lg shadow-amber-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+            <span class="text-3xl filter drop-shadow">📖</span>
+            <span class="font-extrabold text-sm">العربية</span>
         </div>
-        <div onclick="openSubject('english', 'اللغة الإنكليزية')" class="subject-card bg-english text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🔠</span>
-            <span class="font-bold">الإنكليزية</span>
+        <div onclick="playClick(); openSubject('english', 'اللغة الإنكليزية')" class="card-btn grad-english text-white p-4 rounded-2xl shadow-lg shadow-blue-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+            <span class="text-3xl filter drop-shadow">🔠</span>
+            <span class="font-extrabold text-sm">الإنكليزية</span>
         </div>
-        <div onclick="openSubject('biology', 'الأحياء')" class="subject-card bg-biology text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🧬</span>
-            <span class="font-bold">الأحياء</span>
+        <div onclick="playClick(); openSubject('biology', 'علم الأحياء')" class="card-btn grad-biology text-white p-4 rounded-2xl shadow-lg shadow-pink-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+            <span class="text-3xl filter drop-shadow">🧬</span>
+            <span class="font-extrabold text-sm">الأحياء</span>
         </div>
-        <div onclick="openSubject('math', 'الرياضيات')" class="subject-card bg-math text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">📐</span>
-            <span class="font-bold">الرياضيات</span>
+        <div onclick="playClick(); openSubject('math', 'الرياضيات')" class="card-btn grad-math text-white p-4 rounded-2xl shadow-lg shadow-purple-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+            <span class="text-3xl filter drop-shadow">📐</span>
+            <span class="font-extrabold text-sm">الرياضيات</span>
         </div>
-        <div onclick="openSubject('chemistry', 'الكيمياء')" class="subject-card bg-chemistry text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🧪</span>
-            <span class="font-bold">الكيمياء</span>
+        <div onclick="openSubject('chemistry', 'الكيمياء')" class="card-btn grad-chemistry text-white p-4 rounded-2xl shadow-lg shadow-teal-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+            <span class="text-3xl filter drop-shadow">🧪</span>
+            <span class="font-extrabold text-sm">الكيمياء</span>
         </div>
-        <div onclick="openSubject('physics', 'الفيزياء')" class="subject-card bg-physics text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer col-span-2">
-            <span class="text-3xl">⚡</span>
-            <span class="font-bold">الفيزياء</span>
+        <div onclick="playClick(); openSubject('physics', 'الفيزياء')" class="card-btn grad-physics text-white p-4 rounded-2xl shadow-lg shadow-rose-500/20 flex flex-col items-center justify-center gap-1.5 cursor-pointer col-span-2">
+            <span class="text-3xl filter drop-shadow">⚡</span>
+            <span class="font-extrabold text-sm">الفيزياء</span>
         </div>
     </div>
 
-    <!-- نافذة المادة المنبثقة -->
-    <div id="subject-modal" class="modal modal-hidden fixed inset-0 z-50 flex flex-col bg-gray-50" style="background-color: var(--tg-theme-bg-color, #f3f4f6);">
-        <div class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-10" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
-            <h2 id="modal-title" class="text-xl font-bold" style="color: var(--tg-theme-text-color, #1f2937);">اسم المادة</h2>
-            <button onclick="closeSubject()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold">عودة ✕</button>
+    <!-- نافذة أسئلة المادة -->
+    <div id="subject-modal" class="modal modal-hidden fixed inset-0 z-50 flex flex-col bg-slate-50">
+        <div class="bg-white/90 backdrop-blur-md p-4 shadow-sm flex justify-between items-center sticky top-0 z-10 border-b border-slate-100">
+            <h2 id="modal-title" class="text-base font-black text-slate-800">اسم المادة</h2>
+            <button onclick="playClick(); closeSubject()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-xl text-xs font-bold transition">إغلاق ✕</button>
         </div>
 
-        <div id="modal-chapters-container" class="p-4 flex-1 overflow-y-auto space-y-3">
-        </div>
+        <div id="modal-chapters-container" class="p-4 flex-1 overflow-y-auto space-y-3"></div>
     </div>
+
+    <script src="data.js"></script>
 
     <script>
+        // --- 1. محرك الأصوات والتأثيرات الصوتية (Web Audio API) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playClick() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        function playCorrectSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+            osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(now + 0.35);
+        }
+
+        function playWrongSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(now + 0.25);
+        }
+
+        // --- 2. إدارة Telegram Mini App ---
         const tg = window.Telegram.WebApp;
         tg.expand();
         
@@ -110,284 +167,35 @@
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             userName = tg.initDataUnsafe.user.first_name;
         }
-        document.getElementById('welcome-text').innerText = `مرحباً ${userName} 🎓`;
+        document.getElementById('welcome-text').innerText = `أهلاً بك يا ${userName} 🎓`;
 
-        // قاعدة البيانات الشاملة المدمجة لمادة الإسلامية (2016 - 2026)
-        const subjectsData = {
-            'islamic': [
-                {
-                    id: 'unit1',
-                    title: '📖 الفصل الأول (الوحدة الأولى)',
-                    subsections: [
-                        {
-                            id: 'u1_m1',
-                            name: 'المبحث الأول: أحكام التلاوة (النون الساكنة والتنوين)',
-                            questions: [
-                                { id: 'isl_16_1', text: 'عين أحكام النون الساكنة والتنوين في قوله تعالى: (مِنْ مَاءٍ دَافِقٍ) موضحاً السبب.', year: '2016 الدور الأول', answer: '1. (مِنْ مَاءٍ): إدغام بغنة، لمجيء حرف الميم بعد النون الساكنة.\n2. (مَاءٍ دَافِقٍ): إخفاء، لمجيء حرف الدال بعد التنوين.' },
-                                { id: 'isl_17_1', text: 'ما حكم التنوين في قوله تعالى: (عَلِيمٌ حَكِيمٌ) و(سمِيعٌ بَصِيرٌ)؟', year: '2017 الدور الأول', answer: '1. (عَلِيمٌ حَكِيمٌ): إظهار حلقي لمجيء الحاء بعد التنوين.\n2. (سمِيعٌ بَصِيرٌ): إقلاب لمجيء الباء بعد التنوين.' },
-                                { id: 'isl_18_1', text: 'عين أحكام النون الساكنة والتنوين في الآية الكريمة: (مِنْ كُلِّ أَمْرٍ سَلَامٌ هِيَ).', year: '2018 الدور الأول', answer: '1. (مِنْ كُلِّ): إخفاء.\n2. (أَمْرٍ سَلَامٌ): إخفاء.\n3. (سَلَامٌ هِيَ): إظهار حلقي.' },
-                                { id: 'isl_19_1', text: 'عين أحكام النون الساكنة والتنوين في قوله تعالى: (مِنْ نِعْمَةٍ تُجْزَى) مع بيان السبب.', year: '2019 الدور الأول', answer: '1. (مِنْ نِعْمَةٍ): إدغام بغنة لمجيء النون المتحركة بعد النون الساكنة.\n2. (نِعْمَةٍ تُجْزَى): إخفاء لمجيء حرف التاء بعد التنوين.' },
-                                { id: 'isl_20_1', text: 'ما حكم التنوين في قوله تعالى (غَفُورٌ رَحِيمٌ)؟', year: '2020 التمهيدي', answer: 'إدغام بغير غنة، لمجيء حرف الراء بعد التنوين.' },
-                                { id: 'isl_21_1', text: 'عرف الإدغام بغير غنة واذكر حرفيه مع التمثيل.', year: '2021 الدور الثاني', answer: 'هو إدغام النون الساكنة أو التنوين في أحد الحرفين (ل، ر) بغير غنة.\nمثال: (مِنْ لَدُنْهُ)، (غَفُورٌ رَحِيمٌ).' },
-                                { id: 'isl_22_1', text: 'عرف الإظهار الحلقي واذكر أحرفه الستة مع مثال واحد.', year: '2022 التمهيدي', answer: 'هو إخراج النون الساكنة أو التنوين من مخرجها من غير غنة إذا جاء بعدها أحد أحرف الحلق (ء، هـ، ع، ح، غ، خ). مثال: (مَنْ آمَنَ).' },
-                                { id: 'isl_23_1', text: 'ما حكم النون الساكنة في قوله تعالى (مَنْ يَعْمَلْ) وما علته؟', year: '2023 الدور الأول', answer: 'الحكم: إدغام بغنة.\nالعلة: لمجيء حرف الياء (من حروف ينمو) بعد النون الساكنة.' },
-                                { id: 'isl_24_1', text: 'عرف الإظهار الحلقي واذكر أحرفه الستة مع مثال واحد.', year: '2024 التمهيدي', answer: 'هو إخراج النون الساكنة أو التنوين من مخرجها من غير غنة إذا جاء بعدها أحد أحرف الحلق (ء، هـ، ع، ح، غ، خ). مثال: (مَنْ آمَنَ).' },
-                                { id: 'isl_25_1', text: 'ما حكم النون الساكنة في قوله تعالى (مَنْ يَعْمَلْ) مع ذكر السبب؟', year: '2025 الدور الأول', answer: 'الحكم: إدغام بغنة.\nالسبب: لمجيء حرف الياء بعد النون الساكنة.' },
-                                { id: 'isl_26_1', text: 'عين أحكام النون الساكنة والتنوين في الآية: (مِنْ كُلِّ أَمْرٍ سَلَامٌ هِيَ).', year: '2026 التمهيدي', answer: '1. (مِنْ كُلِّ): إخفاء.\n2. (أَمْرٍ سَلَامٌ): إخفاء.\n3. (سَلَامٌ هِيَ): إظهار حلقي.' }
-                            ]
-                        },
-                        {
-                            id: 'u1_m2',
-                            name: 'المبحث الثاني: القرآن الكريم (سورة البقرة)',
-                            questions: [
-                                { id: 'isl_16_4', text: 'اكتب من سورة البقرة من قوله تعالى: (شَهْرُ رَمَضَانَ الَّذِي أُنْزِلَ فِيهِ الْقُرْآنُ...) إلى قوله تعالى: (...وَلَعَلَّكُمْ تَشْكُرُونَ).', year: '2016 الدور الأول', answer: 'تراجع الآية (185) من سورة البقرة كما في النص المقرر.' },
-                                { id: 'isl_17_3', text: 'اكتب ما تحفظه من سورة البقرة من قوله تعالى: (يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ...) إلى (...لَعَلَّكُمْ تَتَّقُونَ).', year: '2017 الدور الثالث', answer: 'تراجع الآية (183) من سورة البقرة في النص المقرر.' },
-                                { id: 'isl_22_4', text: 'ما معاني المفردات التالية: (الْفُرْقَانَ)، (يُسْرًا)، (الْعُسْرَ)؟', year: '2022 الدور الأول', answer: 'الفرقان: القرآن الذي يفرق بين الحق والباطل.\nيسراً: سهولة وتيسيراً.\nالعسر: المشقة والشدة.' },
-                                { id: 'isl_26_2', text: 'اكتب من سورة البقرة من قوله تعالى: (يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ...) إلى (...لَعَلَّكُمْ تَشْكُرُونَ).', year: '2026 التمهيدي', answer: 'تراجع الآيات (183-185) من سورة البقرة في النص المقرر.' }
-                            ]
-                        },
-                        {
-                            id: 'u1_m3',
-                            name: 'المبحث الثالث: الحديث الشريف (تعظيم حرمة المسلم)',
-                            questions: [
-                                { id: 'isl_16_6', text: 'اكتب حديثاً نبوياً شريفاً في (تعظيم حرمة المسلم).', year: '2016 الدور الأول', answer: 'قال رسول الله (ص): "كل المسلم على المسلم حرام: دمه، وماله، وعرضه". صدق رسول الله.' },
-                                { id: 'isl_18_5', text: 'ما هي الأمور الثلاثة التي حرمها رسول الله (ص) في حديث تعظيم حرمة المسلم؟', year: '2018 الدور الثاني', answer: '1. دمه (حرمة القتل والاعتداء البدني).\n2. ماله (حرمة السرقة والغصب).\n3. عرضه (حرمة الغيبة والسب والإهانة).' },
-                                { id: 'isl_23_6', text: 'اكتب حديثاً نبوياً شريفاً في (تعظيم حرمة المسلم).', year: '2023 الدور الأول', answer: 'قال رسول الله (ص): "كل المسلم على المسلم حرام: دمه، وماله، وعرضه". صدق رسول الله.' }
-                            ]
-                        },
-                        {
-                            id: 'u1_m4',
-                            name: 'المبحث الرابع: التهذيب (التكبر)',
-                            questions: [
-                                { id: 'isl_16_7', text: 'ما أسباب التكبر؟ واذكر اثنين من أساليب علاجه.', year: '2016 الدور الثاني', answer: 'أسبابه: الإعجاب بالنفس، وضعف الإيمان.\nعلاجه: أن يعرف الإنسان أصل خلقه والتواضع لله والعباد.' },
-                                { id: 'isl_20_6', text: 'ما هو التكبر؟ وما أسبابه الرئيسة؟', year: '2020 التمهيدي', answer: 'التكبر: حالة مرضية تجعل الإنسان يرى نفسه أكبر من حجمها ويزدري الآخرين.\nأسبابه: الإعجاب بالنفس، العجب بالمال أو الجاه، وضعف الإيمان.' },
-                                { id: 'isl_23_7', text: 'عرف التكبر، واذكر أسبابه وعلاجه.', year: '2023 التمهيدي', answer: 'التكبر: حالة مرضية تجعل الإنسان يرى نفسه أكبر من حجمها ويزدري الآخرين.\nأسبابه: الإعجاب بالنفس، العجب بالمال، ضعف الإيمان.\nعلاجه: التواضع والتعرف على أصل الإنسان.' }
-                            ]
-                        },
-                        {
-                            id: 'u1_m5',
-                            name: 'المبحث الخامس: الأبحاث (الوظائف الاقتصادية للدولة)',
-                            questions: [
-                                { id: 'isl_17_6', text: 'ما مسؤولية الدولة الإسلامية في مراقبة الفعاليات الاقتصادية؟', year: '2017 الدور الأول', answer: 'تراقب الأسواق لمنع الغش، الإحتكار، الربا، والمعاملات المحرمة لضمان العدالة وتوفير السلع الأساسية.' },
-                                { id: 'isl_20_7', text: 'تكلم عن الوظائف الاقتصادية للدولة في الإسلام.', year: '2020 الدور الثاني', answer: '1. مراقبة الفعاليات الاقتصادية.\n2. منع المعاملات المحرمة كالربا والإحتكار.\n3. تحقيق التكافل الاجتماعي والتوازن الاقتصادي.' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: 'unit2',
-                    title: '📖 الفصل الثاني (الوحدة الثانية)',
-                    subsections: [
-                        {
-                            id: 'u2_m1',
-                            name: 'المبحث الأول: أحكام التلاوة (الميم الساكنة)',
-                            questions: [
-                                { id: 'isl_16_9', text: 'ما حكم الميم الساكنة في قوله تعالى (لَهُمْ مَا يَشَاءُونَ)؟', year: '2016 الدور الأول', answer: 'الحكم: إدغام مماثلين شفوي، لمجيء الميم المتحركة بعد الميم الساكنة.' },
-                                { id: 'isl_22_9', text: 'ما أحكام الميم الساكنة؟ واذكر مثالاً للإخفاء الشفوي.', year: '2022 الدور الثالث', answer: 'أحكامها: 1. الإخفاء الشفوي (تَرْمِيهِمْ بِحِجَارَةٍ).\n2. إدغام المماثلين.\n3. الإظهار الشفوي.' }
-                            ]
-                        },
-                        {
-                            id: 'u2_m2',
-                            name: 'المبحث الثاني: القرآن الكريم (سورة آل عمران)',
-                            questions: [
-                                { id: 'isl_16_10', text: 'اكتب ما تحفظه من سورة آل عمران من قوله تعالى: (رَبَّنَا لا تُزِغْ قُلُوبَنَا...) إلى (...إِنَّكَ لا تُخْلِفُ الْمِيعَادَ).', year: '2016 الدور الثاني', answer: 'تراجع الآيتان (8-9) من سورة آل عمران.' },
-                                { id: 'isl_25_5', text: 'ما معاني المفردات: (تُزِغْ قُلُوبَنَا)، (الْوَهَّابُ)؟', year: '2025 الدور الأول', answer: 'تزغ قلوبنا: تملها عن الحق والرشاد.\nالوهاب: الكثيرة هباته وأعطياته.' }
-                            ]
-                        },
-                        {
-                            id: 'u2_m3',
-                            name: 'المبحث الثالث: الحديث الشريف (النهي عن الغضب)',
-                            questions: [
-                                { id: 'isl_16_11', text: 'اذكر أهم ما يرشد إليه حديث (النهي عن الغضب).', year: '2016 الدور الأول', answer: '1. الغضب أصل كل شر ومفتاح المفاسد.\n2. ضبط النفس عند الغضب دليل القوة والفضيلة.\n3. التخلق بالحلم والعفو.' },
-                                { id: 'isl_25_6', text: 'اكتب حديثاً نبوياً شريفاً في (النهي عن الغضب) وما أهم ما يرشد إليه؟', year: '2025 الدور الثاني', answer: 'قال رجل للنبي (ص): أوصني، قال: "لا تغضب" فردد مراراً، قال: "لا تغضب".\nيرشد إلى: السيطرة على النفس عند الغضب والتخلق بالحلم.' }
-                            ]
-                        },
-                        {
-                            id: 'u2_m4',
-                            name: 'المبحث الرابع: التهذيب (التوبة النصوح)',
-                            questions: [
-                                { id: 'isl_16_12', text: 'ما التوبة النصوح؟ وما الشروط الأساسية للقبول؟', year: '2016 الدور الثالث', answer: 'التوبة النصوح: التوبة الصادقة الخالصة التي لا يعود صاحبها إلى الذنب.\nشروطها: الندم على الذنب، الإقلاع عنه فوراً، العزم على عدم العودة، وأداء حقوق الناس.' },
-                                { id: 'isl_21_12', text: 'ما هي التوبة النصوح؟ وما شروط صحتها؟', year: '2021 الدور الثاني', answer: 'التوبة النصوح: هي التوبة الصادقة الخالصة لله التي لا رجعة فيها إلى الذنب.\nشروطها: 1. الندم على ما فات. 2. الإقلاع الفوري عن الذنب. 3. العزم على عدم العودة. 4. إرجاع الحقوق إلى أصحابها.' }
-                            ]
-                        },
-                        {
-                            id: 'u2_m5',
-                            name: 'المبحث الخامس: الأبحاث (التكافل الاجتماعي)',
-                            questions: [
-                                { id: 'isl_16_13', text: 'ما مفهوم التكافل الاجتماعي في الإسلام؟', year: '2016 الدور الثاني', answer: 'هو كفالة أفراد المجتمع بعضهم لبعض وتعاونهم للنهوض بالحاجات المادية والمعنوية للجميع.' },
-                                { id: 'isl_20_12', text: 'ما مفهوم التكافل الاجتماعي في الإسلام؟ وما وسائله؟', year: '2020 الدور الأول', answer: 'هو التزام أبناء المجتمع بالتعاون والمساعدة المتبادلة لكفالة الحاجات الأساسية للمحتاجين.\nوسائله: الزكاة، الصدقات، الكفارات، الأوقاف، والضرائب العادلة.' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: 'unit3',
-                    title: '📖 الفصل الثالث (الوحدة الثالثة)',
-                    subsections: [
-                        {
-                            id: 'u3_m1',
-                            name: 'المبحث الأول: أحكام التلاوة',
-                            questions: [
-                                { id: 'isl_16_14', text: 'استخرج حكم النون الساكنة في (مِنْ حَكِيمٍ حَمِيدٍ).', year: '2016 الدور الأول', answer: 'الحكم: إظهار حلقي، لمجيء الحاء بعد النون الساكنة والتنوين.' },
-                                { id: 'isl_20_13', text: 'استخرج المدود وبين نوعها في قوله تعالى (الْمَلَائِكَةُ - قَالُوا آمَنَّا).', year: '2020 التمهيدي', answer: '1. (الْمَلَائِكَةُ): مد واجب متصل.\n2. (قَالُوا آمَنَّا): مد جائز منفصل.' }
-                            ]
-                        },
-                        {
-                            id: 'u3_m2',
-                            name: 'المبحث الثاني: القرآن الكريم (سورة النساء)',
-                            questions: [
-                                { id: 'isl_16_15', text: 'اذكر معاني الكلمات التالية من سورة النساء: (حُوباً كَبِيراً)، (تَعْضُلُوهُنَّ).', year: '2016 الدور الثالث', answer: 'حوباً كبيراً: إثماً عظيماً.\nتعضلوهن: تضيّقوا عليهن وتمنعوهن.' },
-                                { id: 'isl_24_8', text: 'اكتب الآيات المقررة للحفظ من سورة النساء.', year: '2024 الدور الأول', answer: 'تراجع الآيات المقررة للحفظ من سورة النساء في النص المقرر.' }
-                            ]
-                        },
-                        {
-                            id: 'u3_m3',
-                            name: 'المبحث الثالث: الحديث الشريف (محاسبة النفس)',
-                            questions: [
-                                { id: 'isl_16_16', text: 'اكتب الحديث الشريف في (محاسبة النفس).', year: '2016 الدور الثاني', answer: 'قال رسول الله (ص): "الكيّس من دان نفسه وعمل لما بعد الموت، والعاجز من أتبع نفسه هواها وتمنى على الله الأماني".' },
-                                { id: 'isl_24_9', text: 'اكتب حديثاً نبوياً شريفاً في (محاسبة النفس).', year: '2024 الدور الثاني', answer: 'قال رسول الله (ص): "الكيّس من دان نفسه وعمل لما بعد الموت، والعاجز من أتبع نفسه هواها وتمنى على الله الأماني".' }
-                            ]
-                        },
-                        {
-                            id: 'u3_m4',
-                            name: 'المبحث الرابع: التهذيب (العدالة)',
-                            questions: [
-                                { id: 'isl_16_17', text: 'كيف تجسدت العدالة في سيرة الرسول (ص) والأئمة والتابعين؟', year: '2016 الدور الأول', answer: 'تجسدت بعدم التمييز بين القريب والبعيد أو الغني والفقير في تطبيق حدود الله وتوفير الحقوق للجميع.' },
-                                { id: 'isl_25_8', text: 'ما مفهوم العدالة في الإسلام وما آثارها على الفرد والمجتمع؟', year: '2025 الدور الأول', answer: 'العدالة: إعطاء كل ذي حق حقه دون تمييز. تؤدي لنشر الأمن والمحبة واستقرار المجتمع.' }
-                            ]
-                        },
-                        {
-                            id: 'u3_m5',
-                            name: 'المبحث الخامس: الأبحاث (العدالة الاجتماعية)',
-                            questions: [
-                                { id: 'isl_16_18', text: 'ما الوسائل التي اتخذها الإسلام لتحقيق العدالة الاجتماعية؟', year: '2016 الدور الثالث', answer: 'تحريم الربا والاستغلال، إيجاب الزكاة والصدقات، ورعاية ذوي الحاجة وضمان كفالة معيشية لهم.' },
-                                { id: 'isl_26_3', text: 'كيف تحقق الشريعة التوازن والعدالة الاجتماعية بين طبقات المجتمع؟', year: '2026 التمهيدي', answer: 'عن طريق فرض الزكاة والصدقات، تحريم الربا والاحتكار، ورعاية الفئات الضعيفة.' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: 'unit4',
-                    title: '📖 الفصل الرابع (الوحدة الرابعة)',
-                    subsections: [
-                        {
-                            id: 'u4_m1',
-                            name: 'المبحث الأول: أحكام التلاوة',
-                            questions: [
-                                { id: 'isl_16_19', text: 'ما الحكم في (أنْ بَبُورَ)؟', year: '2016 الدور الثاني', answer: 'إقلاب، لمجيء الباء بعد النون الساكنة.' },
-                                { id: 'isl_24_10', text: 'ما الحكم في (أنْ بَبُورَ)؟', year: '2024 التمهيدي', answer: 'إقلاب، لمجيء حرف الباء بعد النون الساكنة.' }
-                            ]
-                        },
-                        {
-                            id: 'u4_m2',
-                            name: 'المبحث الثاني: القرآن الكريم (سورة الإسراء)',
-                            questions: [
-                                { id: 'isl_16_20', text: 'اكتب الآيات الكريمة الخاصة بالوالدين من سورة الإسراء.', year: '2016 الدور الأول', answer: 'تراجع الآيتان (23-24) من سورة الإسراء.' },
-                                { id: 'isl_25_9', text: 'اكتب الآيات الكريمة الخاصة ببر الوالدين من سورة الإسراء.', year: '2025 الدور الأول', answer: 'تراجع الآيات المقررة (23-24) من سورة الإسراء.' }
-                            ]
-                        },
-                        {
-                            id: 'u4_m3',
-                            name: 'المبحث الثالث: الحديث الشريف (فضل الجهاد)',
-                            questions: [
-                                { id: 'isl_16_21', text: 'اكتب الحديث الشريف المبيّن لفضل الجهاد والشرف فيه.', year: '2016 الدور الثالث', answer: 'قال رسول الله (ص): "ما من مكلوم يُكلم في سبيل الله إلا جاء يوم القيامة وكلمه يدمى، اللون لون الدم، والريح ريح المسك".' },
-                                { id: 'isl_24_11', text: 'اكتب حديثاً نبوياً في (فضل الجهاد في سبيل الله).', year: '2024 الدور الأول', answer: 'قال رسول الله (ص): "ما من مكلوم يُكلم في سبيل الله إلا جاء يوم القيامة وكلمه يدمى، اللون لون الدم، والريح ريح المسك".' }
-                            ]
-                        },
-                        {
-                            id: 'u4_m4',
-                            name: 'المبحث الرابع: التهذيب (الإيثار)',
-                            questions: [
-                                { id: 'isl_16_22', text: 'عرف الإيثار، واذكر آية قرآنية تدل عليه.', year: '2016 الدور الأول', answer: 'الإيثار: أن يقدم الإنسان حاجة غيره على حاجة نفسه.\nالآية: (وَيُؤْثِرُونَ عَلَى أَنْفُسِهِمْ وَلَوْ كَانَ بِهِمْ خَصَاصَةٌ).' },
-                                { id: 'isl_25_10', text: 'عرف الإيثار واذكر آية قرآنية تدل عليه.', year: '2025 الدور الثاني', answer: 'الإيثار: تقديم حاجة الغير على النفس والتضحية لأجله.\nالآية: (وَيُؤْثِرُونَ عَلَى أَنْفُسِهِمْ وَلَوْ كَانَ بِهِمْ خَصَاصَةٌ).' }
-                            ]
-                        },
-                        {
-                            id: 'u4_m5',
-                            name: 'المبحث الخامس: الأبحاث (حقوق الزوجين)',
-                            questions: [
-                                { id: 'isl_16_23', text: 'اذكر حقوق الزوجة على زوجها في الشريعة الإسلامية.', year: '2016 الدور الثاني', answer: '1. مهرها الصداق.\n2. النفقة بالمعروف.\n3. المعاشرة بالحسنى والاحترام.' },
-                                { id: 'isl_24_12', text: 'اذكر حقوق الزوجة على زوجها في الشريعة الإسلامية.', year: '2024 الدور الثاني', answer: '1. المهر الصداق.\n2. النفقة بالمعروف.\n3. المعاشرة بالحسنى والاحترام.' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: 'unit5',
-                    title: '📖 الفصل الخامس (الوحدة الخامسة)',
-                    subsections: [
-                        {
-                            id: 'u5_m1',
-                            name: 'المبحث الأول: أحكام التلاوة',
-                            questions: [
-                                { id: 'isl_16_24', text: 'بين الحكم في (مِنْ لَدُنْهُ).', year: '2016 الدور الأول', answer: 'إدغام بغير غنة، لمجيء اللام بعد النون الساكنة.' },
-                                { id: 'isl_25_11', text: 'اذكر حكم النون والتنوين في (مِنْ مَاءٍ مَهِينٍ).', year: '2025 التمهيدي', answer: '1. (مِنْ مَاءٍ): إدغام بغنة.\n2. (مَاءٍ مَهِينٍ): إدغام بغنة.' }
-                            ]
-                        },
-                        {
-                            id: 'u5_m2',
-                            name: 'المبحث الثاني: القرآن الكريم (سورة الأنبياء)',
-                            questions: [
-                                { id: 'isl_16_25', text: 'اكتب ما تحفظه من سورة الأنبياء.', year: '2016 الدور الثاني', answer: 'تراجع الآيات المقررة للحفظ من سورة الأنبياء.' },
-                                { id: 'isl_24_13', text: 'اكتب الآيات المقررة للحفظ من سورة الأنبياء.', year: '2024 التمهيدي', answer: 'تراجع الآيات المقررة للحفظ من سورة الأنبياء في كتاب الإسلامية.' }
-                            ]
-                        },
-                        {
-                            id: 'u5_m3',
-                            name: 'المبحث الثالث: الحديث الشريف (من أخلاق النبي ص)',
-                            questions: [
-                                { id: 'isl_16_26', text: 'اذكر صفة العفو والتواضع في أخلاق النبي (ص).', year: '2016 الدور الأول', answer: 'كان الرسول (ص) يعفو عند القدرة، يتواضع للصغير والكبير، ويخدم نفسه وأهله.' },
-                                { id: 'isl_24_14', text: 'اذكر أمثلة من أخلاق النبي محمد (ص) في التعامل مع أصحابه والناس.', year: '2024 التمهيدي', answer: 'التواضع، الصدق، الأمانة، الرفق بالضعفاء، والعفو عند القدرة.' }
-                            ]
-                        },
-                        {
-                            id: 'u5_m4',
-                            name: 'المبحث الرابع: التهذيب (الغيبة والنميمة)',
-                            questions: [
-                                { id: 'isl_16_27', text: 'ما هي النميمة؟ وما أثرها المدمّر في المجتمع؟', year: '2016 الدور الثالث', answer: 'النميمة: نقل الكلام بين الناس بقصد الإفساد وررع الفتنة.\nأثرها: تقطع أواصر المحبة، تنشر الكراهية، وتفكك الأسرة والمجتمع.' },
-                                { id: 'isl_25_12', text: 'عرف الغيبة والنميمة وبين خطرهما الاجتماعي.', year: '2025 الدور الأول', answer: 'الغيبة: ذكر الأخ بما يكره في غيبته.\nالنميمة: نقل الكلام بين الناس بقصد الإفساد. خطرهما: تفكيك المجتمع ونشر الضغينة.' }
-                            ]
-                        },
-                        {
-                            id: 'u5_m5',
-                            name: 'المبحث الخامس: الأبحاث (حرمة المسكرات)',
-                            questions: [
-                                { id: 'isl_16_28', text: 'لماذا حرم الإسلام المسكرات والمخدرات؟', year: '2016 الدور الأول', answer: 'لأنها تذهب العقل الذي هو مناط التكليف، وتدمر صحة الإنسان ونفسيته، وتسبب الجرائم والمفاسد.' },
-                                { id: 'isl_25_13', text: 'ما الحكم الشرعي لتعاطي وتجارة المخدرات والمسكرات؟ وما أضرارها؟', year: '2025 الدور الثاني', answer: 'الحكم: محرمة تحريماً قاطعاً. أضرارها: إتلاف العقل والبدن، تدمير الأسرة والمجتمع، وخسران الآخرة.' }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            'arabic': []
-        };
-
+        // --- 3. عرض الفصول والأسئلة ---
         function openSubject(subjectKey, subjectName) {
             const modal = document.getElementById('subject-modal');
             document.getElementById('modal-title').innerText = subjectName;
             const container = document.getElementById('modal-chapters-container');
             container.innerHTML = '';
             
-            if (subjectsData[subjectKey] && subjectsData[subjectKey].length > 0) {
+            if (typeof subjectsData !== 'undefined' && subjectsData[subjectKey] && subjectsData[subjectKey].length > 0) {
                 subjectsData[subjectKey].forEach(unit => {
                     let unitHTML = `
                         <div class="mb-4">
-                            <h3 class="text-md font-extrabold text-emerald-800 bg-emerald-50 p-3 rounded-lg border border-emerald-200 mb-2">${unit.title}</h3>
+                            <h3 class="text-xs font-black text-emerald-800 bg-emerald-100/60 p-2.5 rounded-xl border border-emerald-200/50 mb-2">${unit.title}</h3>
                             <div class="space-y-2">
                     `;
 
                     unit.subsections.forEach(sub => {
                         unitHTML += `
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
-                                <button onclick="toggleChapter('${sub.id}')" class="w-full text-right p-3 font-bold flex justify-between items-center text-sm" style="color: var(--tg-theme-text-color, #1f2937);">
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                                <button onclick="playClick(); toggleChapter('${sub.id}')" class="w-full text-right p-3.5 font-bold flex justify-between items-center text-xs text-slate-800">
                                     <span>${sub.name}</span>
-                                    <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">${sub.questions.length} أسئلة ▾</span>
+                                    <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-100">${sub.questions.length} أسئلة ▾</span>
                                 </button>
-                                <div id="content-${sub.id}" class="chapter-content bg-gray-50" style="background-color: var(--tg-theme-bg-color, #f9fafb);">
+                                <div id="content-${sub.id}" class="chapter-content bg-slate-50/50">
                                     <div class="p-3 space-y-3">
                                         ${sub.questions.length > 0 
                                             ? sub.questions.map(q => renderQuestion(q)).join('')
-                                            : '<p class="text-xs text-gray-400 text-center py-2">سيتم إضافة الأسئلة قريباً...</p>'
+                                            : '<p class="text-xs text-slate-400 text-center py-2">قريباً إضافة باقي الأسئلة...</p>'
                                         }
                                     </div>
                                 </div>
@@ -399,7 +207,7 @@
                     container.insertAdjacentHTML('beforeend', unitHTML);
                 });
             } else {
-                container.innerHTML = `<p class="text-center text-gray-500 py-10">سيتم إضافة أسئلة ${subjectName} قريباً!</p>`;
+                container.innerHTML = `<p class="text-center text-slate-400 font-bold py-10 text-xs">جاري تجهيز أسئلة ${subjectName}...</p>`;
             }
             
             modal.classList.remove('modal-hidden');
@@ -410,18 +218,60 @@
         }
 
         function renderQuestion(q) {
-            return `
-                <div class="p-3 bg-white rounded-lg shadow-sm border border-gray-100" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="badge bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-bold">📅 ${q.year}</span>
+            let optionsHTML = '';
+            if (q.options && q.options.length > 0) {
+                optionsHTML = `
+                    <div class="grid grid-cols-2 gap-1.5 mt-2">
+                        ${q.options.map(opt => `
+                            <button onclick="checkAnswer(this, '${opt}', '${q.answer}')" class="text-xs font-bold p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/60 transition">
+                                ${opt}
+                            </button>
+                        `).join('')}
                     </div>
-                    <p class="font-medium text-sm mb-3 leading-relaxed" style="color: var(--tg-theme-text-color, #1f2937);">${q.text}</p>
-                    <button onclick="showAnswer('${q.id}')" class="text-xs bg-gray-100 text-gray-700 font-bold px-3 py-1.5 rounded-md w-full">إظهار الجواب النموذجي 👁️</button>
-                    <div id="answer-${q.id}" class="hidden mt-2 p-2.5 bg-green-50 text-green-800 text-sm rounded border border-green-100 whitespace-pre-line leading-relaxed">
+                `;
+            }
+
+            return `
+                <div class="p-3.5 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] bg-purple-50 text-purple-700 border border-purple-100 px-2 py-0.5 rounded-md font-extrabold">📅 ${q.year}</span>
+                    </div>
+                    <p class="font-bold text-xs mb-2 leading-relaxed text-slate-800">${q.text}</p>
+                    
+                    ${optionsHTML}
+
+                    <button onclick="playClick(); showAnswer('${q.id}')" class="text-[11px] bg-slate-100 text-slate-600 font-bold px-3 py-1.5 rounded-lg w-full mt-2 border border-slate-200/50">
+                        عرض / إخفاء الجواب النموذجي 👁️
+                    </button>
+                    <div id="answer-${q.id}" class="hidden mt-2 p-2.5 bg-emerald-50 text-emerald-900 text-xs font-semibold rounded-lg border border-emerald-100 whitespace-pre-line leading-relaxed">
                         ${q.answer}
                     </div>
                 </div>
             `;
+        }
+
+        function checkAnswer(btn, selected, correct) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('bg-slate-100', 'hover:bg-slate-200');
+            });
+
+            if (selected.trim() === correct.trim()) {
+                playCorrectSound();
+                btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+            } else {
+                playWrongSound();
+                btn.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+                // تظليل الجواب الصحيح
+                buttons.forEach(b => {
+                    if (b.innerText.trim() === correct.trim()) {
+                        b.classList.add('bg-emerald-100', 'text-emerald-800', 'border-emerald-300');
+                    }
+                });
+            }
         }
 
         function showAnswer(qId) {
