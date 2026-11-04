@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة الأسئلة الوزارية</title>
+    
+    <!-- مكتبة Telegram Mini App الرسمية -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- خطوط جوجل (Tajawal) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- إعدادات Tailwind للخطوط والوضع الليلي -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        html { scroll-behavior: smooth; }
+
+        .modal-enter {
+            animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .modal-exit {
+            animation: modalFadeOut 0.2s ease-in forwards;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes modalFadeOut {
+            from { opacity: 1; transform: scale(1) translateY(0); }
+            to { opacity: 0; transform: scale(0.95) translateY(10px); }
+        }
+        
+        .card-active:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen pb-10">
+
+    <!-- شريط التنقل العلوي -->
+    <nav class="sticky top-0 z-40 bg-white/80 dark:bg-darkCard/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 transition-colors">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 text-white p-1.5 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                    </svg>
+                </div>
+                <h1 class="font-bold text-xl tracking-tight">سادس<span class="text-blue-600 dark:text-blue-400">كم</span></h1>
+            </div>
+            
+            <!-- زر الوضع الليلي -->
+            <button id="theme-toggle" class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors focus:outline-none">
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- قسم الترحيب -->
+    <header class="max-w-5xl mx-auto px-4 sm:px-6 mt-10 mb-12 text-center">
+        <span class="inline-block py-1.5 px-4 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 text-sm font-bold mb-4 shadow-sm">
+            حصرياً لطلاب السادس الإعدادي
+        </span>
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">منصة الأسئلة الوزارية</h2>
+        <!-- الترحيب بالطالب من تيليجرام -->
+        <p id="telegram-welcome" class="text-xl text-blue-600 dark:text-blue-400 font-bold max-w-2xl mx-auto mb-2">مرحباً يا بطل، مستعد للاختبار؟</p>
+        <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">كافة الأسئلة الوزارية مجمعة في المنصة حتى لا يضيع وقتك. اختبر نفسك الآن وقارن إجاباتك بالأجوبة النموذجية.</p>
+    </header>
+
+    <!-- شبكة المواد -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            
+            <button onclick="openSubjectModal('التربية الإسلامية')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-green-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">التربية الإسلامية</h3>
+            </button>
+
+            <button onclick="openSubjectModal('اللغة العربية')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-teal-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">اللغة العربية</h3>
+            </button>
+
+            <button onclick="openSubjectModal('اللغة الإنكليزية')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-blue-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">اللغة الإنكليزية</h3>
+            </button>
+
+            <button onclick="openSubjectModal('الأحياء')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">الأحياء</h3>
+            </button>
+
+            <button onclick="openSubjectModal('الرياضيات')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-orange-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">الرياضيات</h3>
+            </button>
+
+            <button onclick="openSubjectModal('الكيمياء')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-purple-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">الكيمياء</h3>
+            </button>
+
+            <button onclick="openSubjectModal('الفيزياء')" class="card-active group flex flex-col items-center p-6 bg-white dark:bg-darkCard rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 hover:-translate-y-1">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-indigo-200 dark:shadow-none group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <h3 class="font-bold text-lg text-slate-700 dark:text-slate-200">الفيزياء</h3>
+            </button>
+
+        </div>
+    </main>
+
+    <!-- النافذة المنبثقة -->
+    <div id="subject-modal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div id="modal-content" class="bg-white dark:bg-darkCard w-full sm:w-11/12 max-w-md sm:rounded-3xl rounded-t-[2.5rem] shadow-2xl p-6 sm:p-8 transform translate-y-full sm:translate-y-10 transition-transform duration-300 flex flex-col max-h-[90vh]">
+            
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 sm:hidden"></div>
+
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modal-subject-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100">اسم المادة</h3>
+                <button onclick="closeModal()" class="p-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>
+
+            <!-- محتوى الأقسام -->
+            <div id="modal-chapters-container" class="overflow-y-auto mb-6 px-1 space-y-3">
+            </div>
+
+            <!-- زر الاختبار -->
+            <button class="w-full py-4 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-500/30 transition-all active:scale-95 flex justify-center items-center gap-2 mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                ابدأ الاختبار الشامل
+            </button>
+        </div>
+    </div>
+
+    <!-- الأكواد (JavaScript) -->
+    <script>
+        // --- دمج خصائص تيليجرام ---
+        const tg = window.Telegram.WebApp;
+        
+        // تمديد الواجهة لملء شاشة تيليجرام
+        tg.expand();
+        
+        // جلب اسم المستخدم من تيليجرام والترحيب به
+        const welcomeText = document.getElementById('telegram-welcome');
+        const userName = tg.initDataUnsafe?.user?.first_name;
+        
+        if (userName) {
+            welcomeText.innerText = `مرحباً يا ${userName}، مستعد للاختبار؟`;
+        }
+
+        // --- إعداد الوضع الليلي ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // قراءة تفضيلات ثيم تيليجرام أو المتصفح
+        if (tg.colorScheme === 'dark' || localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            lightIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            darkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            darkIcon.classList.toggle('hidden');
+            lightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // --- دوال التحكم بالنافذة المنبثقة (Modal) ---
+        const modal = document.getElementById('subject-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-subject-title');
+        const chaptersContainer = document.getElementById('modal-chapters-container');
+
+        // قاعدة بيانات تجريبية 
+        const subjectsData = {
+            "التربية الإسلامية": [
+                {
+                    title: "المبحث الأول",
+                    questions: [
+                        { text: "عرف القرآن الكريم لغة واصطلاحاً؟ وما هي الغاية من نزوله؟", year: "2023 الدور الأول" },
+                        { text: "ما هي شروط التوبة النصوح كما وردت في المنهج؟", year: "2022 التمهيدي" },
+                        { text: "اذكر الآيات التي تحث على التفكر في خلق الله.", year: "2021 الدور الثاني" }
+                    ]
+                },
+                {
+                    title: "المبحث الثاني",
+                    questions: [
+                        { text: "اشرح معنى الحديث النبوي الشريف (رضا الله في رضا الوالدين)؟", year: "2023 الدور الثاني" },
+                        { text: "ما هي حقوق الجار في الإسلام وكيف حث عليها النبي؟", year: "2020 الدور الأول" }
+                    ]
+                }
+            ],
+            "اللغة العربية": [
+                {
+                    title: "أسلوب الاستفهام",
+                    questions: [
+                        { text: "ما إعراب اسم الاستفهام (من) في قوله تعالى: (مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ)؟ ولماذا؟", year: "2021 الدور الأول" },
+                        { text: "استخرج الاستفهام وبين نوعه (حقيقي أم مجازي) في الشطر التالي.", year: "2020 الدور الثاني" }
+                    ]
+                }
+            ]
+        };
+
+        function toggleChapter(btn) {
+            const content = btn.nextElementSibling;
+            const chevron = btn.querySelector('.chevron');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        function openSubjectModal(subjectName) {
+            modalTitle.innerText = subjectName;
+            chaptersContainer.innerHTML = '';
+            
+            const chapters = subjectsData[subjectName] || [];
+            
+            if (chapters.length === 0) {
+                 chaptersContainer.innerHTML = '<div class="text-center p-8"><p class="text-slate-500 dark:text-slate-400">جاري إضافة الأسئلة والمباحث لهذه المادة، يرجى العودة لاحقاً!</p></div>';
+            } else {
+                chapters.forEach((chapter, index) => {
+                    let questionsHTML = '';
+                    
+                    if (chapter.questions && chapter.questions.length > 0) {
+                        questionsHTML = chapter.questions.map(q => `
+                            <div class="bg-white dark:bg-darkCard p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm mb-3 group/q">
+                                <p class="text-slate-700 dark:text-slate-300 font-medium mb-3 leading-relaxed">${q.text}</p>
+                                <span class="inline-flex items-center gap-1 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 text-xs px-2.5 py-1.5 rounded-lg font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                                    ${q.year}
+                                </span>
+                            </div>
+                        `).join('');
+                    } else {
+                        questionsHTML = '<p class="text-slate-400 dark:text-slate-500 text-sm p-4 text-center">لا توجد أسئلة وزارية مضافة لهذا المبحث حالياً.</p>';
+                    }
+
+                    const chapterHTML = `
+                        <div class="accordion-item bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl overflow-hidden transition-all">
+                            <button onclick="toggleChapter(this)" class="w-full flex items-center justify-between p-4 hover:bg-slate-100 dark:hover:bg-slate-700/80 transition-colors group">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/40 p-2 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                    </div>
+                                    <span class="font-bold text-lg text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${chapter.title}</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 transform transition-transform duration-300 chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </button>
+                            <div class="chapter-content hidden px-3 pb-3 pt-1">
+                                ${questionsHTML}
+                            </div>
+                        </div>
+                    `;
+                    chaptersContainer.insertAdjacentHTML('beforeend', chapterHTML);
+                });
+            }
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                if (window.innerWidth < 640) {
+                    modalContent.classList.remove('translate-y-full');
+                } else {
+                    modalContent.classList.remove('translate-y-10');
+                    modalContent.classList.add('modal-enter');
+                }
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            if (window.innerWidth < 640) {
+                modalContent.classList.add('translate-y-full');
+            } else {
+                modalContent.classList.remove('modal-enter');
+                modalContent.classList.add('modal-exit');
+            }
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modalContent.classList.remove('modal-exit');
+                if(window.innerWidth >= 640){
+                     modalContent.classList.add('translate-y-10');
+                }
+            }, 300);
+            
+            document.body.style.overflow = '';
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
