@@ -33,13 +33,12 @@
             transition: max-height 0.4s ease; 
         }
         .chapter-expanded { 
-            max-height: 2000px; 
+            max-height: 3000px; 
         }
         .badge { 
             font-size: 0.75rem; 
         }
 
-        /* الألوان المميزة الأصلية */
         .bg-islamic { background: linear-gradient(135deg, #10b981, #059669); }
         .bg-arabic { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .bg-english { background: linear-gradient(135deg, #3b82f6, #2563eb); }
@@ -51,7 +50,7 @@
 </head>
 <body class="antialiased pb-10">
 
-    <!-- شريط الترحيب التفاعلي -->
+    <!-- شريط الترحيب -->
     <div class="bg-white dark:bg-gray-800 shadow-sm p-4 rounded-b-3xl mb-6 mx-2 mt-2 flex justify-between items-center" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
         <div>
             <h1 class="text-xl font-bold text-gray-800" style="color: var(--tg-theme-text-color, #1f2937);" id="welcome-text">مرحباً يا بطل 🎓</h1>
@@ -60,7 +59,7 @@
         <div class="text-2xl">🇮🇶</div>
     </div>
 
-    <!-- شبكة المواد بالألوان المميزة -->
+    <!-- شبكة المواد -->
     <div class="px-4 grid grid-cols-2 gap-4">
         <div onclick="openSubject('islamic', 'التربية الإسلامية')" class="subject-card bg-islamic text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
             <span class="text-3xl">🕋</span>
@@ -92,7 +91,7 @@
         </div>
     </div>
 
-    <!-- نافذة المادة المنبثقة (Modal) -->
+    <!-- النافذة المنبثقة -->
     <div id="subject-modal" class="modal modal-hidden fixed inset-0 z-50 flex flex-col bg-gray-50" style="background-color: var(--tg-theme-bg-color, #f3f4f6);">
         <div class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-10" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
             <h2 id="modal-title" class="text-xl font-bold" style="color: var(--tg-theme-text-color, #1f2937);">اسم المادة</h2>
@@ -100,7 +99,6 @@
         </div>
 
         <div id="modal-chapters-container" class="p-4 flex-1 overflow-y-auto space-y-3">
-            <!-- تُولد المباحث والأسئلة هنا برمجياً -->
         </div>
     </div>
 
@@ -114,37 +112,55 @@
         }
         document.getElementById('welcome-text').innerText = `مرحباً ${userName} 🎓`;
 
-        // بيانات المباحث والأسئلة مقسمة بشارات السنوات
+        // أسئلة الإسلامية الوزارية الكاملة مقسمة حسب المباحث
         const subjectsData = {
             'islamic': [
                 {
                     id: 'ch1',
                     title: 'المبحث الأول: أحكام التلاوة',
                     questions: [
-                        { id: 'q1', text: 'ما حكم النون الساكنة في قوله تعالى (من يعمل)؟', year: '2023 الدور الأول', answer: 'إدغام بغنة.' },
-                        { id: 'q2', text: 'عرف الإظهار الحلقي مع ذكر مثال.', year: '2022 التمهيدي', answer: 'إخراج النون الساكنة من مخرجها من غير غنة، مثال: (من آمن).' }
+                        { id: 'isl_q1', text: 'ما حكم النون الساكنة في قوله تعالى (مَنْ يَعْمَلْ) وما علته؟', year: '2023 الدور الأول', answer: 'الحكم: إدغام بغنة. العلة: لمجيء حرف الياء (من حروف ينمو) بعد النون الساكنة.' },
+                        { id: 'isl_q2', text: 'عرف الإظهار الحلقي واذكر ألم أحرفه مع مثال واحد.', year: '2022 الدور الثاني', answer: 'الإظهار الحلقي: هو إخراج النون الساكنة أو التنوين من مخرجها من غير غنة إذا جاء بعدها أحد أحرف الحلق الستة (ء، هـ، ع، ح، غ، خ). مثال: (مَنْ آمَنَ).' },
+                        { id: 'isl_q3', text: 'عين أحكام النون الساكنة والتنوين في الآية: (مِنْ كُلِّ أَمْرٍ سَلَامٌ هِيَ)', year: '2021 الدور الأول', answer: '1. (مِنْ كُلِّ): إخفاء. 2. (أَمْرٍ سَلَامٌ): إخفاء. 3. (سَلَامٌ هِيَ): إظهار حلقي.' },
+                        { id: 'isl_q4', text: 'ما حكم التنوين في قوله تعالى (غَفُورٌ رَحِيمٌ)؟', year: '2020 التمهيدي', answer: 'إدغام بغير غنة، لمجيء حرف الراء بعد التنوين.' },
+                        { id: 'isl_q5', text: 'عرف الإقلاب واذكر حرفه مع التمثيل.', year: '2019 الدور الثالث', answer: 'الإقلاب: قلب النون الساكنة أو التنوين ميماً مخفاة بغنة إذا جاء بعدها حرف الباء (ب). مثال: (مِنْ بَعْدِ).' }
                     ]
                 },
                 {
                     id: 'ch2',
-                    title: 'المبحث الثاني: الحفظ والتفسير',
+                    title: 'المبحث الثاني: القرآن الكريم (الحفظ والتفسير)',
                     questions: [
-                        { id: 'q3', text: 'اكتب ما تحفظه من سورة البقرة من قوله تعالى (يا أيها الذين آمنوا كتب عليكم الصيام...)', year: '2021 الدور الثاني', answer: 'تراجع الآيات 183-185 من سورة البقرة.' }
+                        { id: 'isl_q6', text: 'اكتب من سورة البقرة من قوله تعالى: (يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ...) إلى قوله تعالى: (...لَعَلَّكُمْ تَشْكُرُونَ).', year: '2023 الدور الثاني', answer: 'تراجع الآيات (183-185) من سورة البقرة في الكتاب المقرر.' },
+                        { id: 'isl_q7', text: 'ما معنى المفردات التالية: (الْفُرْقَانَ)، (يُسْرًا)، (الْعُسْرَ)؟', year: '2022 الدور الأول', answer: 'الفرقان: القرآن الذي يفرق بين الحق والباطل.\nيسراً: سهولة وتيسيراً.\nالعسر: المشقة والشدة.' },
+                        { id: 'isl_q8', text: 'ما أهم ما ترشد إليه سورة آل عمران (آيات الحفظ المقرر)؟', year: '2021 التمهيدي', answer: '1. التأكيد على وحدانية الله وكمال قدرته.\n2. الإيمان بالقضاء والقدر.\n3. الدعاء والتضرع إلى الله بثبات الهداية.' }
                     ]
                 },
-                { id: 'ch3', title: 'المبحث الثالث: الأحاديث الشريفة', questions: [] },
-                { id: 'ch4', title: 'المبحث الرابع: التهذيب', questions: [] },
-                { id: 'ch5', title: 'المبحث الخامس: الأبحاث الإسلامية', questions: [] }
-            ],
-            'arabic': [
                 {
-                    id: 'ch1',
-                    title: 'الفصل الأول: قواعد اللغة (الاستفهام)',
+                    id: 'ch3',
+                    title: 'المبحث الثالث: الحديث النبوي الشريف',
                     questions: [
-                        { id: 'q1', text: 'ما نوع الاستفهام في قوله تعالى: (أأنتم أنشأتم شجرتها أم نحن المنشئون)؟', year: '2023 الدور الأول', answer: 'استفهام تصوري.' }
+                        { id: 'isl_q9', text: 'اكتب حديثاً نبوياً شريفاً في (تعظيم حرمة المسلم).', year: '2023 الدور الأول', answer: 'قال رسول الله (ص): "كل المسلم على المسلم حرام: دمه، وماله، وعرضه". صدق رسول الله.' },
+                        { id: 'isl_q10', text: 'اكتب حديثاً نبوياً شريفاً في (النهي عن الغضب) واذكر أهم ما يرشد إليه.', year: '2022 الدور الثالث', answer: 'نص الحديث: قال رجل للنبي (ص): أوصني، قال: "لا تغضب" فردد مراراً، قال: "لا تغضب".\nأهم ما يرشد إليه: الغضب مفتاح كل شر، والسيطرة على النفس عند الغضب قوة وشجاعة.' }
+                    ]
+                },
+                {
+                    id: 'ch4',
+                    title: 'المبحث الرابع: التهذيب',
+                    questions: [
+                        { id: 'isl_q11', text: 'عرف التكبر، واذكر أسبابه وعلاجه.', year: '2023 التمهيدي', answer: 'التكبر: حالة مرضية تجعل الإنسان يرى نفسه أكبر من حجمها ويزدري الآخرين.\nأسبابه: الإعجاب بالنفس، العجب بالمال أو الجاه، ضعف الإيمان.\nعلاجه: معرفة أصل الإنسان الخلاد، والتواضع لله وللناس.' },
+                        { id: 'isl_q12', text: 'ما هي التوبة النصوح؟ وما شروط صحتها؟', year: '2021 الدور الثاني', answer: 'التوبة النصوح: هي التوبة الصادقة الخالصة لله التي لا رجعة فيها إلى الذنب.\nشروطها: 1. الندم على ما فات. 2. الإقلاع الفوري عن الذنب. 3. العزم على عدم العودة. 4. إرجاع الحقوق إلى أصحابها.' }
+                    ]
+                },
+                {
+                    id: 'ch5',
+                    title: 'المبحث الخامس: الأبحاث الإسلامية',
+                    questions: [
+                        { id: 'isl_q13', text: 'تكلم عن الوظائف الاقتصادية للدولة في الإسلام.', year: '2022 الدور الأول', answer: 'تتضمن: 1. مراقبة الفعاليات الاقتصادية. 2. منع المعاملات المحرمة كالربا والإحتكار. 3. تحقيق التكافل الاجتماعي والتوازن الاقتصادي.' },
+                        { id: 'isl_q14', text: 'ما مفهوم التكافل الاجتماعي في الإسلام؟ وما وسائله؟', year: '2020 الدور الأول', answer: 'هو التزام أبناء المجتمع بالتعاون والمساعدة المتبادلة لكفالة الحاجات الأساسية للمحتاجين.\nوسائله: الزكاة، الصدقات، الكفارات، الأوقاف، والضرائب العادلة التي تفرضها الدولة.' }
                     ]
                 }
-            ]
+            ],
+            'arabic': []
         };
 
         function openSubject(subjectKey, subjectName) {
@@ -192,7 +208,7 @@
                     </div>
                     <p class="font-medium text-sm mb-3" style="color: var(--tg-theme-text-color, #1f2937);">${q.text}</p>
                     <button onclick="showAnswer('${q.id}')" class="text-xs bg-gray-100 text-gray-700 font-bold px-3 py-1.5 rounded-md w-full">إظهار الجواب النموذجي 👁️</button>
-                    <div id="answer-${q.id}" class="hidden mt-2 p-2 bg-green-50 text-green-800 text-sm rounded border border-green-100">
+                    <div id="answer-${q.id}" class="hidden mt-2 p-2 bg-green-50 text-green-800 text-sm rounded border border-green-100 whitespace-pre-line">
                         ${q.answer}
                     </div>
                 </div>
