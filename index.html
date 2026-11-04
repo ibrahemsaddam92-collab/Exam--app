@@ -3,20 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منصة السادس الإعدادي</title>
+    <title>منصة السادس الإعدادي - Telegram Mini App</title>
+    <!-- مكتبة تيليجرام الرسمية -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--tg-theme-bg-color, #f3f4f6); color: var(--tg-theme-text-color, #1f2937); }
-        .subject-card { transition: transform 0.2s; }
-        .subject-card:active { transform: scale(0.96); }
-        .modal { transition: opacity 0.3s ease, transform 0.3s ease; }
-        .modal-hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
-        .chapter-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-        .chapter-expanded { max-height: 2000px; }
-        .badge { font-size: 0.7rem; }
-        /* ألوان المواد */
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background-color: var(--tg-theme-bg-color, #f3f4f6); 
+            color: var(--tg-theme-text-color, #1f2937); 
+        }
+        .subject-card { 
+            transition: all 0.2s ease-in-out; 
+        }
+        .subject-card:active { 
+            transform: scale(0.95); 
+        }
+        .modal { 
+            transition: opacity 0.3s ease, transform 0.3s ease; 
+        }
+        .modal-hidden { 
+            opacity: 0; 
+            pointer-events: none; 
+            transform: translateY(20px); 
+        }
+        .chapter-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.4s ease; 
+        }
+        .chapter-expanded { 
+            max-height: 3000px; 
+        }
+        .badge { 
+            font-size: 0.75rem; 
+        }
+        
+        /* ألوان المواد المميزة */
         .bg-islamic { background: linear-gradient(135deg, #10b981, #059669); }
         .bg-arabic { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .bg-english { background: linear-gradient(135deg, #3b82f6, #2563eb); }
@@ -28,61 +52,68 @@
 </head>
 <body class="antialiased pb-10">
 
-    <!-- شريط الترحيب (Telegram) -->
-    <div class="bg-white dark:bg-gray-800 shadow-sm p-4 rounded-b-3xl mb-6 mx-2 mt-2 flex justify-between items-center" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
+    <!-- شريط الترحيب التفاعلي مع تيليجرام -->
+    <div class="bg-white dark:bg-gray-800 shadow-md p-5 rounded-b-3xl mb-6 mx-2 mt-2 flex justify-between items-center" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
         <div>
-            <h1 class="text-xl font-bold text-gray-800" style="color: var(--tg-theme-text-color, #1f2937);" id="welcome-text">مرحباً يا بطل 🎓</h1>
-            <p class="text-sm text-gray-500" style="color: var(--tg-theme-hint-color, #6b7280);">اختر المادة لتبدأ الاختبار</p>
+            <h1 class="text-2xl font-extrabold text-gray-800" style="color: var(--tg-theme-text-color, #1f2937);" id="welcome-text">مرحباً يا بطل 🎓</h1>
+            <p class="text-sm text-gray-500 mt-1" style="color: var(--tg-theme-hint-color, #6b7280);">اختر المادة لتبدأ مراجعة الأسئلة الوزارية</p>
         </div>
-        <div class="text-2xl">🇮🇶</div>
+        <div class="text-3xl">🇮🇶</div>
     </div>
 
-    <!-- شبكة المواد -->
+    <!-- شبكة المواد بالألوان الجميلة -->
     <div class="px-4 grid grid-cols-2 gap-4">
         <div onclick="openSubject('islamic', 'التربية الإسلامية')" class="subject-card bg-islamic text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🕋</span><span class="font-bold">الإسلامية</span>
+            <span class="text-4xl">🕋</span>
+            <span class="font-bold text-lg">الإسلامية</span>
         </div>
         <div onclick="openSubject('arabic', 'اللغة العربية')" class="subject-card bg-arabic text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">📖</span><span class="font-bold">العربية</span>
+            <span class="text-4xl">📖</span>
+            <span class="font-bold text-lg">العربية</span>
         </div>
         <div onclick="openSubject('english', 'اللغة الإنكليزية')" class="subject-card bg-english text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🔠</span><span class="font-bold">الإنكليزية</span>
+            <span class="text-4xl">🔠</span>
+            <span class="font-bold text-lg">الإنكليزية</span>
         </div>
         <div onclick="openSubject('biology', 'الأحياء')" class="subject-card bg-biology text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🧬</span><span class="font-bold">الأحياء</span>
+            <span class="text-4xl">🧬</span>
+            <span class="font-bold text-lg">الأحياء</span>
         </div>
         <div onclick="openSubject('math', 'الرياضيات')" class="subject-card bg-math text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">📐</span><span class="font-bold">الرياضيات</span>
+            <span class="text-4xl">📐</span>
+            <span class="font-bold text-lg">الرياضيات</span>
         </div>
         <div onclick="openSubject('chemistry', 'الكيمياء')" class="subject-card bg-chemistry text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer">
-            <span class="text-3xl">🧪</span><span class="font-bold">الكيمياء</span>
+            <span class="text-4xl">🧪</span>
+            <span class="font-bold text-lg">الكيمياء</span>
         </div>
         <div onclick="openSubject('physics', 'الفيزياء')" class="subject-card bg-physics text-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer col-span-2">
-            <span class="text-3xl">⚡</span><span class="font-bold">الفيزياء</span>
+            <span class="text-4xl">⚡</span>
+            <span class="font-bold text-lg">الفيزياء</span>
         </div>
     </div>
 
-    <!-- نافذة المادة المنبثقة (Modal) -->
+    <!-- نافذة المادة المنبثقة (Modal) بالتصميم الجميل الأصلي -->
     <div id="subject-modal" class="modal modal-hidden fixed inset-0 z-50 flex flex-col bg-gray-50" style="background-color: var(--tg-theme-bg-color, #f3f4f6);">
         <!-- رأس النافذة -->
         <div class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-10" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
             <h2 id="modal-title" class="text-xl font-bold" style="color: var(--tg-theme-text-color, #1f2937);">اسم المادة</h2>
-            <button onclick="closeSubject()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold">عودة ✕</button>
+            <button onclick="closeSubject()" class="bg-gray-200 text-gray-700 px-4 py-1.5 rounded-full text-sm font-bold active:scale-95 transition">إغلاق ✕</button>
         </div>
 
-        <!-- المؤقت -->
-        <div id="timer-bar" class="hidden bg-red-100 text-red-700 p-2 text-center font-bold text-sm shadow-inner">
+        <!-- مؤقت الامتحان -->
+        <div id="timer-bar" class="hidden bg-red-100 text-red-700 p-2 text-center font-bold text-sm border-b border-red-200">
             ⏳ الوقت المتبقي: <span id="time-display">15:00</span>
         </div>
 
-        <!-- قائمة المباحث/الفصول -->
+        <!-- حاوية المباحث/الفصول والأسئلة -->
         <div id="modal-chapters-container" class="p-4 flex-1 overflow-y-auto space-y-3">
-            <!-- تُولد الفصول هنا برمجياً -->
+            <!-- تُولد الفصول والأسئلة هنا برمجياً -->
         </div>
     </div>
 
     <script>
-        // 1. إعداد تيليجرام
+        // 1. تفعيل Telegram WebApp وتخصيص الاسم والواجهة
         const tg = window.Telegram.WebApp;
         tg.expand();
         
@@ -92,11 +123,12 @@
         }
         document.getElementById('welcome-text').innerText = `مرحباً ${userName} 🎓`;
 
-        // 2. إدارة البيانات والتقدم (Local Storage)
+        // 2. إدارة البيانات والتقييم والتقدم المحفوظ (Local Storage)
         let userProgress = JSON.parse(localStorage.getItem('sadsProgress')) || {};
         let currentTimer = null;
-        let timeLeft = 900; // 15 دقيقة لكل فصل
+        let timeLeft = 900;
 
+        // هيكلية البيانات التي تجمع المباحث، الفصول، والأسئلة المجهزة بشارات السنوات
         const subjectsData = {
             'islamic': [
                 {
@@ -113,35 +145,50 @@
                     questions: [
                         { id: 'q3', text: 'اكتب ما تحفظه من سورة البقرة من قوله تعالى (يا أيها الذين آمنوا كتب عليكم الصيام...)', year: '2021 الدور الثاني', answer: 'تراجع الآيات 183-185 من سورة البقرة.' }
                     ]
+                },
+                { id: 'ch3', title: 'المبحث الثالث: الأحاديث الشريفة', questions: [] },
+                { id: 'ch4', title: 'المبحث الرابع: التهذيب', questions: [] },
+                { id: 'ch5', title: 'المبحث الخامس: الأبحاث الإسلامية', questions: [] }
+            ],
+            'arabic': [
+                {
+                    id: 'ch1',
+                    title: 'الفصل الأول: قواعد اللغة (الاستفهام)',
+                    questions: [
+                        { id: 'q1', text: 'ما نوع الاستفهام في قوله تعالى: (أأنتم أنشأتم شجرتها أم نحن المنشئون)؟', year: '2023 الدور الأول', answer: 'استفهام تصوري.' }
+                    ]
                 }
             ]
-            // يمكنك إضافة باقي المواد بنفس الهيكلية
         };
 
-        // 3. فتح المادة
+        // 3. فتح المادة داخل الـ Modal
         function openSubject(subjectKey, subjectName) {
             const modal = document.getElementById('subject-modal');
             document.getElementById('modal-title').innerText = subjectName;
             const container = document.getElementById('modal-chapters-container');
             container.innerHTML = '';
             
-            if (subjectsData[subjectKey]) {
+            if (subjectsData[subjectKey] && subjectsData[subjectKey].length > 0) {
                 subjectsData[subjectKey].forEach(chapter => {
-                    // حساب تقدم الفصل
                     let chProgress = userProgress[`${subjectKey}_${chapter.id}`] || {};
                     let answeredCount = Object.keys(chProgress).length;
-                    let isCompleted = answeredCount === chapter.questions.length;
+                    let isCompleted = chapter.questions.length > 0 && answeredCount === chapter.questions.length;
 
                     const chapterHTML = `
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff); border-color: var(--tg-theme-hint-color, #e5e7eb);">
                             <button onclick="toggleChapter('${subjectKey}', '${chapter.id}')" class="w-full text-right p-4 font-bold flex justify-between items-center" style="color: var(--tg-theme-text-color, #1f2937);">
                                 <span>${chapter.title}</span>
-                                <span class="text-sm ${isCompleted ? 'text-green-500' : 'text-gray-400'}">${answeredCount}/${chapter.questions.length} ▾</span>
+                                <span class="text-sm ${isCompleted ? 'text-green-500 font-extrabold' : 'text-gray-400'}">
+                                    ${chapter.questions.length > 0 ? `${answeredCount}/${chapter.questions.length} ▾` : 'قريباً'}
+                                </span>
                             </button>
-                            <div id="content-${chapter.id}" class="chapter-content bg-gray-50 p-0" style="background-color: var(--tg-theme-bg-color, #f9fafb);">
+                            <div id="content-${chapter.id}" class="chapter-content bg-gray-50" style="background-color: var(--tg-theme-bg-color, #f9fafb);">
                                 <div class="p-4 space-y-4">
-                                    ${chapter.questions.map(q => renderQuestion(subjectKey, chapter.id, q, chProgress[q.id])).join('')}
-                                    <div id="result-${chapter.id}" class="hidden mt-4 p-4 bg-blue-50 rounded-lg text-center"></div>
+                                    ${chapter.questions.length > 0 
+                                        ? chapter.questions.map(q => renderQuestion(subjectKey, chapter.id, q, chProgress[q.id])).join('')
+                                        : '<p class="text-xs text-gray-400 text-center py-2">جارٍ إضافة أسئلة هذا المبحث...</p>'
+                                    }
+                                    <div id="result-${chapter.id}" class="hidden mt-4 p-4 bg-blue-50 rounded-xl text-center border border-blue-100"></div>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +196,7 @@
                     container.insertAdjacentHTML('beforeend', chapterHTML);
                 });
             } else {
-                container.innerHTML = `<p class="text-center text-gray-500 py-10">سيتم إضافة أسئلة ${subjectName} قريباً!</p>`;
+                container.innerHTML = `<p class="text-center text-gray-500 py-12 font-medium">سيتم إضافة كافة أسئلة وزاريات ${subjectName} قريباً جداً!</p>`;
             }
             
             modal.classList.remove('modal-hidden');
@@ -160,27 +207,27 @@
             stopTimer();
         }
 
-        // 4. عرض الأسئلة والأجوبة
+        // 4. عرض الأسئلة مع شارات السنوات والأزرار التفاعلية
         function renderQuestion(subjectKey, chapterId, q, savedStatus) {
             let statusBadge = '';
-            if (savedStatus === 'correct') statusBadge = '<span class="text-green-500 text-xs font-bold mr-2">✅ أجبت بشكل صحيح</span>';
-            if (savedStatus === 'wrong') statusBadge = '<span class="text-red-500 text-xs font-bold mr-2">❌ تحتاج مراجعة</span>';
+            if (savedStatus === 'correct') statusBadge = '<span class="text-green-600 text-xs font-bold mr-auto">✅ تم التقييم (صحيح)</span>';
+            if (savedStatus === 'wrong') statusBadge = '<span class="text-red-500 text-xs font-bold mr-auto">❌ يحتاج مراجعة</span>';
 
             return `
-                <div class="p-3 bg-white rounded-lg shadow-sm border border-gray-100" id="q-container-${q.id}">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="badge bg-purple-100 text-purple-700 px-2 py-1 rounded-md">📅 ${q.year}</span>
+                <div class="p-3.5 bg-white rounded-xl shadow-xs border border-gray-100" id="q-container-${q.id}" style="background-color: var(--tg-theme-secondary-bg-color, #ffffff);">
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="badge bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded-md border border-indigo-100">📅 ${q.year}</span>
                         ${statusBadge}
                     </div>
-                    <p class="font-medium text-sm mb-3" style="color: var(--tg-theme-text-color, #1f2937);">${q.text}</p>
+                    <p class="font-semibold text-sm mb-3 leading-relaxed" style="color: var(--tg-theme-text-color, #1f2937);">${q.text}</p>
                     
-                    <button onclick="showAnswer('${q.id}')" class="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-md w-full mb-2">إظهار الجواب النموذجي 👁️</button>
+                    <button onclick="showAnswer('${q.id}')" class="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold px-3 py-2 rounded-lg w-full mb-2 transition">إظهار الجواب النموذجي 👁️</button>
                     
-                    <div id="answer-${q.id}" class="hidden">
-                        <p class="text-sm text-green-700 bg-green-50 p-2 rounded border border-green-100 mb-3">${q.answer}</p>
+                    <div id="answer-${q.id}" class="hidden mt-2">
+                        <p class="text-sm text-green-800 bg-green-50 p-3 rounded-lg border border-green-100 mb-3 leading-relaxed">${q.answer}</p>
                         <div class="flex gap-2">
-                            <button onclick="saveAnswer('${subjectKey}', '${chapterId}', '${q.id}', 'correct')" class="flex-1 bg-green-500 text-white text-xs py-2 rounded">أجبت صح ✅</button>
-                            <button onclick="saveAnswer('${subjectKey}', '${chapterId}', '${q.id}', 'wrong')" class="flex-1 bg-red-500 text-white text-xs py-2 rounded">أخطأت ❌</button>
+                            <button onclick="saveAnswer('${subjectKey}', '${chapterId}', '${q.id}', 'correct')" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-2 rounded-lg shadow-xs">إجابتي صحيحة ✅</button>
+                            <button onclick="saveAnswer('${subjectKey}', '${chapterId}', '${q.id}', 'wrong')" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold py-2 rounded-lg shadow-xs">أخطأت بالإجابة ❌</button>
                         </div>
                     </div>
                 </div>
@@ -191,7 +238,7 @@
             document.getElementById(`answer-${qId}`).classList.remove('hidden');
         }
 
-        // 5. حفظ التقدم والنتائج
+        // 5. حفظ الإجابات والتقدم
         function saveAnswer(subjectKey, chapterId, qId, status) {
             const key = `${subjectKey}_${chapterId}`;
             if (!userProgress[key]) userProgress[key] = {};
@@ -199,17 +246,17 @@
             userProgress[key][qId] = status;
             localStorage.setItem('sadsProgress', JSON.stringify(userProgress));
             
-            // تحديث الواجهة للسؤال
-            document.getElementById(`answer-${qId}`).classList.add('hidden');
-            openSubject(subjectKey, document.getElementById('modal-title').innerText); // إعادة تحميل لتحديث الشارات
-            document.getElementById(`content-${chapterId}`).classList.add('chapter-expanded'); // إبقاء الفصل مفتوحاً
+            openSubject(subjectKey, document.getElementById('modal-title').innerText);
+            document.getElementById(`content-${chapterId}`).classList.add('chapter-expanded');
             
             checkChapterCompletion(subjectKey, chapterId);
         }
 
-        // 6. ملخص النتائج والمشاركة
+        // 6. ملخص النتيجة الفوري وتفعيل زر المشاركة على تيليجرام
         function checkChapterCompletion(subjectKey, chapterId) {
             const chapter = subjectsData[subjectKey].find(c => c.id === chapterId);
+            if (!chapter || chapter.questions.length === 0) return;
+            
             const progress = userProgress[`${subjectKey}_${chapterId}`] || {};
             
             if (Object.keys(progress).length === chapter.questions.length) {
@@ -220,27 +267,25 @@
                 const resultDiv = document.getElementById(`result-${chapterId}`);
                 resultDiv.classList.remove('hidden');
                 resultDiv.innerHTML = `
-                    <h3 class="font-bold text-blue-800">🎉 اكتمل الفصل!</h3>
-                    <p class="text-sm text-blue-600 mb-2">إجاباتك الصحيحة: ${correctCount} من ${total}</p>
-                    <button onclick="shareScore('${chapter.title}', ${correctCount}, ${total})" class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold w-full shadow-md">
-                        شارك نتيجتك عبر تيليجرام ✈️
+                    <h3 class="font-extrabold text-blue-900 text-base mb-1">🎉 ممتاااااز! أتممت هذا المبحث</h3>
+                    <p class="text-sm text-blue-700 mb-3">نتيجة تقييمك: <span class="font-bold text-green-600">${correctCount}</span> من <span class="font-bold">${total}</span> صحيحة</p>
+                    <button onclick="shareScore('${chapter.title}', ${correctCount}, ${total})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold w-full shadow-md active:scale-95 transition">
+                        مشاركة نتيجتك عبر تيليجرام ✈️
                     </button>
                 `;
             }
         }
 
         function shareScore(chapterTitle, correct, total) {
-            const shareText = `اختبرت نفسي في مادة السادس الإعدادي (${chapterTitle}) وحصلت على ${correct}/${total} ✅. اختبر نفسك الآن عبر المنصة!`;
-            // توجيه لتيليجرام لمشاركة النص (يمكنك لاحقاً إضافة رابط البوت الخاص بك في الرابط)
-            tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/your_bot_username&text=${encodeURIComponent(shareText)}`);
+            const shareText = `أنهيت للتو اختبار (${chapterTitle}) في منصة السادس الإعدادي، وحصلت على ${correct}/${total} إجابة صحيحة! 🎓🔥`;
+            tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/BotFather&text=${encodeURIComponent(shareText)}`);
         }
 
-        // 7. المؤقت وتوسيع الفصل
+        // 7. إدارة القوائم المنسدلة والمؤقت الزمني
         function toggleChapter(subjectKey, chapterId) {
             const content = document.getElementById(`content-${chapterId}`);
             const isExpanded = content.classList.contains('chapter-expanded');
             
-            // إغلاق الجميع
             document.querySelectorAll('.chapter-content').forEach(el => el.classList.remove('chapter-expanded'));
             
             if (!isExpanded) {
@@ -254,7 +299,7 @@
 
         function startTimer() {
             stopTimer();
-            timeLeft = 900; // إعادة تعيين لـ 15 دقيقة
+            timeLeft = 900;
             const timerBar = document.getElementById('timer-bar');
             const timeDisplay = document.getElementById('time-display');
             timerBar.classList.remove('hidden');
